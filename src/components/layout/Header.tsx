@@ -82,20 +82,20 @@ export function Header({ variant = 'default', className }: HeaderProps) {
                 <Image 
                   src="https://administrative.com.br/img/Lampada.png"
                   alt="Administrativa(mente) Logo"
-                  width={20}
-                  height={20}
+                  width={30}
+                  height={30}
                   className="object-contain"
                 />
                 <div className='absolute inset-0 rounded-xl bg-white/20 opacity-0 transition-opacity group-hover:opacity-100' />
               </div>
               
               {/* Logo Text */}
-              <div className='hidden sm:block'>
-                <div className='font-serif text-xl font-bold leading-none'>
+              <div className='block'>
+                <div className='font-serif text-lg sm:text-xl font-bold leading-none'>
                   Administrativa
                   <span className='text-muted-foreground font-normal'>(mente)</span>
                 </div>
-                <div className='text-xs text-muted-foreground font-medium tracking-wide'>
+                <div className='hidden sm:block text-xs text-muted-foreground font-medium tracking-wide'>
                   Premium Business Insights
                 </div>
               </div>
