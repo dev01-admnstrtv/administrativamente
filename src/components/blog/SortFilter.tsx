@@ -25,7 +25,7 @@ export function SortFilter({ currentSort, className }: SortFilterProps) {
   const [isOpen, setIsOpen] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
 
-  const currentOption = sortOptions.find(option => option.value === currentSort) || sortOptions[0]
+  const currentOption = sortOptions.find(option => option.value === currentSort) ?? sortOptions[0]!
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
