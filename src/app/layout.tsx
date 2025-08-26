@@ -3,6 +3,7 @@ import { Inter, Crimson_Text } from 'next/font/google'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { TypographyProvider, TypographyController } from '@/components/ui/TypographyController'
 import './globals.css'
 
 // Inter Variable for sans-serif (Apple-inspired)
@@ -92,11 +93,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange={false}
         >
-          <div className='relative flex min-h-screen flex-col'>
-            <Header />
-            <main className='flex-1'>{children}</main>
-            <Footer />
-          </div>
+          <TypographyProvider>
+            <div className='relative flex min-h-screen flex-col'>
+              <Header />
+              <main className='flex-1'>{children}</main>
+              <Footer />
+            </div>
+            
+            {/* Typography Controller - Premium Reading Experience */}
+            <TypographyController />
+          </TypographyProvider>
         </ThemeProvider>
       </body>
     </html>
