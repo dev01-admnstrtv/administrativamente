@@ -42,8 +42,8 @@ export async function getPublishedPosts(options?: {
     {
       filter,
       sorts,
-      pageSize: options?.pageSize,
-      startCursor: options?.startCursor
+      ...(options?.pageSize !== undefined && { pageSize: options.pageSize }),
+      ...(options?.startCursor !== undefined && { startCursor: options.startCursor })
     }
   )
 
@@ -137,8 +137,8 @@ export async function getPostsByCategory(
     {
       filter,
       sorts,
-      pageSize: options?.pageSize,
-      startCursor: options?.startCursor
+      ...(options?.pageSize !== undefined && { pageSize: options.pageSize }),
+      ...(options?.startCursor !== undefined && { startCursor: options.startCursor })
     }
   )
 
@@ -192,8 +192,8 @@ export async function getPostsByAuthor(
     {
       filter,
       sorts,
-      pageSize: options?.pageSize,
-      startCursor: options?.startCursor
+      ...(options?.pageSize !== undefined && { pageSize: options.pageSize }),
+      ...(options?.startCursor !== undefined && { startCursor: options.startCursor })
     }
   )
 
@@ -299,7 +299,7 @@ export async function getRelatedPosts(
     })
   }
 
-  const filter: NotionFilter = filters.length > 1 ? { and: filters } : filters[0]
+  const filter: NotionFilter = filters.length > 1 ? { and: filters } : filters[0]!
 
   const sorts: NotionSort[] = [
     {
@@ -382,8 +382,8 @@ export async function searchPosts(
     {
       filter,
       sorts,
-      pageSize: options?.pageSize,
-      startCursor: options?.startCursor
+      ...(options?.pageSize !== undefined && { pageSize: options.pageSize }),
+      ...(options?.startCursor !== undefined && { startCursor: options.startCursor })
     }
   )
 
