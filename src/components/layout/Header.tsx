@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Search, Menu, X, Command } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -77,8 +78,14 @@ export function Header({ variant = 'default', className }: HeaderProps) {
               className='group flex items-center space-x-3 text-foreground transition-all hover:opacity-80'
             >
               {/* Logo Icon */}
-              <div className='relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-700 text-white shadow-premium transition-transform group-hover:scale-105 dark:from-zinc-100 dark:to-zinc-300 dark:text-zinc-900'>
-                <span className='font-serif text-lg font-bold'>A</span>
+              <div className='relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-700 shadow-premium transition-transform group-hover:scale-105 dark:from-zinc-100 dark:to-zinc-300 overflow-hidden'>
+                <Image 
+                  src="https://administrative.com.br/img/Lampada.png"
+                  alt="Administrativa(mente) Logo"
+                  width={20}
+                  height={20}
+                  className="object-contain"
+                />
                 <div className='absolute inset-0 rounded-xl bg-white/20 opacity-0 transition-opacity group-hover:opacity-100' />
               </div>
               

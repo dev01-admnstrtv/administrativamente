@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Search, Home, Briefcase, Users, Target, Laptop, Mail, Moon, Sun, Monitor, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -143,8 +144,14 @@ export function MobileMenu({ isOpen, onClose, onSearchOpen }: MobileMenuProps) {
           <div className="flex items-center justify-between p-6 border-b border-border/50">
             <div className="flex items-center gap-3">
               {/* Logo Icon */}
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-700 text-white shadow-premium transition-transform dark:from-zinc-100 dark:to-zinc-300 dark:text-zinc-900">
-                <span className="font-serif text-sm font-bold">A</span>
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-700 shadow-premium transition-transform dark:from-zinc-100 dark:to-zinc-300 overflow-hidden">
+                <Image 
+                  src="https://administrative.com.br/img/Lampada.png"
+                  alt="Administrativa(mente) Logo"
+                  width={18}
+                  height={18}
+                  className="object-contain"
+                />
               </div>
               <div>
                 <div className="font-serif text-lg font-bold leading-none">
