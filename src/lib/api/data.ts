@@ -42,8 +42,6 @@ export const getAllPosts = unstable_cache(
   }> => {
     try {
       const { limit = 10, page = 1, category, author, featured } = options || {}
-      const startCursor = page > 1 ? undefined : undefined // TODO: Implement cursor-based pagination
-      
       let response
       
       if (featured) {
@@ -55,20 +53,17 @@ export const getAllPosts = unstable_cache(
         }
       } else if (category) {
         response = await getPublishedPosts({
-          pageSize: limit,
-          startCursor
+          pageSize: limit
         })
         // TODO: Filter by category
       } else if (author) {
         response = await getPublishedPosts({
-          pageSize: limit,
-          startCursor
+          pageSize: limit
         })
         // TODO: Filter by author
       } else {
         response = await getPublishedPosts({
-          pageSize: limit,
-          startCursor
+          pageSize: limit
         })
       }
 
@@ -139,50 +134,54 @@ export const getFeaturedPosts = unstable_cache(
 /**
  * Get single post by slug with ISR
  */
-export const getPostBySlugWithContent = unstable_cache(
-  async (slug: string): Promise<BlogPost | null> => {
-    if (!slug) return null
+export const getPostBySlugWithContent = async (slug: string): Promise<BlogPost | null> => {
+  const cacheKey = CACHE_KEYS.post(slug)
+  
+  return unstable_cache(
+    async () => {
+      if (!slug) return null
 
-    try {
-      // Get post data
-      const notionPost = await getPostBySlug(slug)
-      if (!notionPost) return null
+      try {
+        // Get post data
+        const notionPost = await getPostBySlug(slug)
+        if (!notionPost) return null
 
-      // Get related data in parallel
-      const [authorResult, categoryResult, contentResult] = await Promise.allSettled([
-        notionPost.properties.Author.relation[0]?.id 
-          ? getAuthorByIdSafe(notionPost.properties.Author.relation[0].id)
-          : Promise.resolve(null),
-        notionPost.properties.Category.select?.name
-          ? getCategoryByNameSafe(notionPost.properties.Category.select.name)
-          : Promise.resolve(null),
-        getPostContent(notionPost.id)
-      ])
+        // Get related data in parallel
+        const [authorResult, categoryResult, contentResult] = await Promise.allSettled([
+          notionPost.properties.Author.relation[0]?.id 
+            ? getAuthorByIdSafe(notionPost.properties.Author.relation[0].id)
+            : Promise.resolve(null),
+          notionPost.properties.Category.select?.name
+            ? getCategoryByNameSafe(notionPost.properties.Category.select.name)
+            : Promise.resolve(null),
+          getPostContent(notionPost.id)
+        ])
 
-      // Transform to blog post
-      const blogPost = transformNotionPost(
-        notionPost,
-        authorResult.status === 'fulfilled' ? authorResult.value : null,
-        categoryResult.status === 'fulfilled' ? categoryResult.value : null
-      )
+        // Transform to blog post
+        const blogPost = transformNotionPost(
+          notionPost,
+          authorResult.status === 'fulfilled' ? authorResult.value : null,
+          categoryResult.status === 'fulfilled' ? categoryResult.value : null
+        )
 
-      // Add content
-      if (contentResult.status === 'fulfilled') {
-        blogPost.content = transformBlocksToHtml(contentResult.value)
+        // Add content
+        if (contentResult.status === 'fulfilled') {
+          blogPost.content = transformBlocksToHtml(contentResult.value)
+        }
+
+        return blogPost
+      } catch (error) {
+        console.error(`Error fetching post ${slug}:`, error)
+        return null
       }
-
-      return blogPost
-    } catch (error) {
-      console.error(`Error fetching post ${slug}:`, error)
-      return null
+    },
+    [cacheKey],
+    {
+      revalidate: CACHE_CONFIG.POST.revalidate,
+      tags: CACHE_CONFIG.POST.tags
     }
-  },
-  [CACHE_KEYS.post],
-  {
-    revalidate: CACHE_CONFIG.POST.revalidate,
-    tags: CACHE_CONFIG.POST.tags
-  }
-)
+  )()
+}
 
 /**
  * Get posts by category with caching
@@ -209,7 +208,7 @@ export const getPostsByCategory = unstable_cache(
       const response = await getAllPosts({
         limit,
         page,
-        category: category.name
+        category: category.properties.Name.title[0]?.plain_text || ''
       })
 
       return {
@@ -222,7 +221,7 @@ export const getPostsByCategory = unstable_cache(
       return { posts: [], category: null, hasMore: false }
     }
   },
-  [CACHE_KEYS.postsByCategory],
+  ['posts-by-category'],
   {
     revalidate: CACHE_CONFIG.POSTS.revalidate,
     tags: [...CACHE_CONFIG.POSTS.tags, ...CACHE_CONFIG.CATEGORIES.tags]
@@ -302,7 +301,7 @@ export const getCategoryBySlugWithPosts = unstable_cache(
       return null
     }
   },
-  [CACHE_KEYS.category],
+  ['category'],
   {
     revalidate: CACHE_CONFIG.CATEGORIES.revalidate,
     tags: CACHE_CONFIG.CATEGORIES.tags
@@ -363,7 +362,7 @@ export const getAuthorBySlugWithPosts = unstable_cache(
       return { author: null, posts: [] }
     }
   },
-  [CACHE_KEYS.author],
+  ['author'],
   {
     revalidate: CACHE_CONFIG.AUTHORS.revalidate,
     tags: [...CACHE_CONFIG.AUTHORS.tags, ...CACHE_CONFIG.POSTS.tags]
@@ -392,7 +391,6 @@ export const searchPostsWithCache = unstable_cache(
       
       const response = await searchPosts(query, {
         pageSize: limit,
-        startCursor: page > 1 ? undefined : undefined
       })
 
       // Transform posts
@@ -426,7 +424,7 @@ export const searchPostsWithCache = unstable_cache(
       return { posts: [], query, hasMore: false, total: 0 }
     }
   },
-  [CACHE_KEYS.search],
+  ['search'],
   {
     revalidate: CACHE_CONFIG.SEARCH.revalidate,
     tags: CACHE_CONFIG.SEARCH.tags
@@ -472,7 +470,7 @@ export const getRelatedPostsWithCache = unstable_cache(
       return []
     }
   },
-  [CACHE_KEYS.relatedPosts],
+  ['related-posts'],
   {
     revalidate: CACHE_CONFIG.POSTS.revalidate,
     tags: CACHE_CONFIG.POSTS.tags

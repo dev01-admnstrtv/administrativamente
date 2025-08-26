@@ -14,7 +14,7 @@ import type {
 
 // Initialize Notion client
 export const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: process.env.NOTION_TOKEN || '',
 })
 
 // Database IDs based on CLAUDE.md schema
@@ -54,20 +54,21 @@ export async function queryDatabase<T extends NotionPage = NotionPage>(
   }
 
   try {
-    const query: NotionDatabaseQuery = {
+    const query: any = {
       database_id: databaseId,
-      filter: options?.filter,
-      sorts: options?.sorts,
       page_size: Math.min(options?.pageSize || 100, 100), // Notion API limit
-      start_cursor: options?.startCursor,
     }
 
-    // Remove undefined values
-    Object.keys(query).forEach(key => {
-      if (query[key as keyof NotionDatabaseQuery] === undefined) {
-        delete query[key as keyof NotionDatabaseQuery]
-      }
-    })
+    // Only add optional properties if they have values
+    if (options?.filter) {
+      query.filter = options.filter
+    }
+    if (options?.sorts) {
+      query.sorts = options.sorts  
+    }
+    if (options?.startCursor) {
+      query.start_cursor = options.startCursor
+    }
 
     const response = await notion.databases.query(query)
 

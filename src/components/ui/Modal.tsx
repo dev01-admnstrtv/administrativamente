@@ -43,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({
 
   // Handle escape key
   React.useEffect(() => {
-    if (!closeOnEscape) return
+    if (!closeOnEscape) return () => { /* Cleanup function for when closeOnEscape is false */ }
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -55,6 +55,8 @@ const Modal: React.FC<ModalProps> = ({
       document.addEventListener('keydown', handleEscape)
       return () => document.removeEventListener('keydown', handleEscape)
     }
+    
+    return () => { /* Cleanup function for when isOpen is false */ }
   }, [isOpen, onClose, closeOnEscape])
 
   // Handle body scroll lock
@@ -65,6 +67,8 @@ const Modal: React.FC<ModalProps> = ({
         document.body.style.overflow = 'unset'
       }
     }
+    
+    return () => { /* Cleanup function for when isOpen is false */ }
   }, [isOpen])
 
   const sizeClasses = {

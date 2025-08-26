@@ -3,39 +3,39 @@ export const CACHE_CONFIG = {
   // Posts change frequently, moderate cache
   POSTS: {
     revalidate: 3600, // 1 hour
-    tags: ['posts']
+    tags: ['posts'] as string[]
   },
   
   // Individual posts can be cached longer
   POST: {
     revalidate: 7200, // 2 hours
-    tags: ['post']
+    tags: ['post'] as string[]
   },
   
   // Categories rarely change, longer cache
   CATEGORIES: {
     revalidate: 86400, // 24 hours
-    tags: ['categories']
+    tags: ['categories'] as string[]
   },
   
   // Authors rarely change, longer cache
   AUTHORS: {
     revalidate: 43200, // 12 hours
-    tags: ['authors']
+    tags: ['authors'] as string[]
   },
   
   // Homepage needs fresh content
   HOMEPAGE: {
     revalidate: 1800, // 30 minutes
-    tags: ['homepage', 'posts']
+    tags: ['homepage', 'posts'] as string[]
   },
   
   // Search results should be fresh
   SEARCH: {
     revalidate: 900, // 15 minutes
-    tags: ['search', 'posts']
+    tags: ['search', 'posts'] as string[]
   }
-} as const
+}
 
 /**
  * Cache key generators
