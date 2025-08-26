@@ -204,7 +204,7 @@ function Pagination({ currentPage, totalPages, onPageChange, hasNext, hasPreviou
               </div>
             ) : (
               <Button
-                variant={currentPage === page ? 'default' : 'ghost'}
+                variant={currentPage === page ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => onPageChange(page as number)}
                 className="h-8 w-8 p-0"
