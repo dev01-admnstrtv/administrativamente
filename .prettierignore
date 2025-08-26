@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+.next
+.vercel
+
+# Build outputs
+dist
+build
+out
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log
+logs
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Environment variables
+.env*
+!.env.local.example
