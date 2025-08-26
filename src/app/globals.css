@@ -7,6 +7,11 @@
 @import '../styles/glassmorphism-premium.css';
 @import '../styles/micro-interactions.css';
 
+/* PHASE 2: IMMERSIVE EXPERIENCE STYLES */
+@import '../styles/immersive-3d.css';
+@import '../styles/focus-reading.css';
+@import '../styles/magazine-layouts.css';
+
 @layer base {
   :root {
     /* Apple-inspired Light Mode Colors */

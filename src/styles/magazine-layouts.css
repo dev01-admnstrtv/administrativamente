@@ -1,0 +1,623 @@
+/* ========================================
+   MAGAZINE-STYLE DYNAMIC LAYOUTS - PHASE 2
+   ======================================== */
+
+/* Magazine Layout Variables */
+:root {
+  /* Grid System */
+  --magazine-columns: 12;
+  --magazine-gap: clamp(1rem, 3vw, 2rem);
+  --magazine-rhythm: 1.5rem;
+  
+  /* Typography Scales */
+  --magazine-heading-xl: clamp(2.5rem, 6vw, 4rem);
+  --magazine-heading-lg: clamp(2rem, 5vw, 3rem);
+  --magazine-heading-md: clamp(1.5rem, 4vw, 2.25rem);
+  --magazine-heading-sm: clamp(1.25rem, 3vw, 1.875rem);
+  
+  /* Asymmetric Layout */
+  --golden-ratio: 1.618;
+  --column-narrow: 4;
+  --column-medium: 5;
+  --column-wide: 7;
+  --column-full: 12;
+  
+  /* Visual Rhythm */
+  --baseline: 1.5rem;
+  --section-spacing: calc(var(--baseline) * 4);
+  --article-spacing: calc(var(--baseline) * 3);
+  --paragraph-spacing: var(--baseline);
+}
+
+/* ========================================
+   MAGAZINE GRID SYSTEM
+   ======================================== */
+
+.magazine-container {
+  display: grid;
+  grid-template-columns: repeat(var(--magazine-columns), 1fr);
+  gap: var(--magazine-gap);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--magazine-gap);
+}
+
+/* Grid Utilities */
+.col-1 { grid-column: span 1; }
+.col-2 { grid-column: span 2; }
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-5 { grid-column: span 5; }
+.col-6 { grid-column: span 6; }
+.col-7 { grid-column: span 7; }
+.col-8 { grid-column: span 8; }
+.col-9 { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+/* Row Spanning */
+.row-span-2 { grid-row: span 2; }
+.row-span-3 { grid-row: span 3; }
+.row-span-4 { grid-row: span 4; }
+
+/* Positioning */
+.col-start-1 { grid-column-start: 1; }
+.col-start-2 { grid-column-start: 2; }
+.col-start-3 { grid-column-start: 3; }
+.col-start-4 { grid-column-start: 4; }
+.col-start-5 { grid-column-start: 5; }
+.col-start-6 { grid-column-start: 6; }
+.col-start-7 { grid-column-start: 7; }
+.col-start-8 { grid-column-start: 8; }
+
+/* ========================================
+   ASYMMETRIC LAYOUTS
+   ======================================== */
+
+/* Golden Ratio Layout */
+.layout-golden {
+  display: grid;
+  grid-template-columns: 1fr var(--golden-ratio)fr;
+  gap: var(--magazine-gap);
+  align-items: start;
+}
+
+.layout-golden-reverse {
+  display: grid;
+  grid-template-columns: var(--golden-ratio)fr 1fr;
+  gap: var(--magazine-gap);
+  align-items: start;
+}
+
+/* Z-Pattern Layout */
+.layout-z-pattern {
+  display: grid;
+  grid-template-areas: 
+    "hero hero hero"
+    "feature-1 . feature-2"
+    ". center ."
+    "feature-3 . feature-4"
+    "footer footer footer";
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto auto auto auto auto;
+  gap: var(--magazine-gap);
+}
+
+.z-hero { grid-area: hero; }
+.z-feature-1 { grid-area: feature-1; }
+.z-feature-2 { grid-area: feature-2; }
+.z-center { grid-area: center; }
+.z-feature-3 { grid-area: feature-3; }
+.z-feature-4 { grid-area: feature-4; }
+.z-footer { grid-area: footer; }
+
+/* Masonry-style Layout */
+.layout-masonry {
+  columns: 3;
+  column-gap: var(--magazine-gap);
+  column-fill: balance;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: var(--magazine-gap);
+  display: inline-block;
+  width: 100%;
+}
+
+/* ========================================
+   FEATURE ARTICLE LAYOUTS
+   ======================================== */
+
+/* Hero Article */
+.article-hero {
+  position: relative;
+  grid-column: 1 / -1;
+  min-height: 70vh;
+  display: flex;
+  align-items: end;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  border-radius: 1rem;
+  overflow: hidden;
+  color: white;
+}
+
+.article-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: var(--section-spacing);
+  max-width: 50%;
+}
+
+.article-hero-title {
+  font-size: var(--magazine-heading-xl);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--article-spacing);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.article-hero-excerpt {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: var(--article-spacing);
+  opacity: 0.95;
+}
+
+.article-hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.8s ease;
+}
+
+.article-hero:hover .article-hero-background {
+  transform: scale(1.05);
+}
+
+/* Featured Articles */
+.article-featured {
+  display: grid;
+  grid-template-rows: 200px 1fr;
+  gap: 1rem;
+  background: hsl(var(--card));
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid hsl(var(--border));
+}
+
+.article-featured:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.article-featured-image {
+  position: relative;
+  overflow: hidden;
+  background: hsl(var(--muted));
+}
+
+.article-featured-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.article-featured-title {
+  font-size: var(--magazine-heading-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+  color: hsl(var(--foreground));
+}
+
+.article-featured-excerpt {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  flex-grow: 1;
+}
+
+/* Sidebar Articles */
+.article-sidebar {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid hsl(var(--border));
+  transition: all 0.3s ease;
+}
+
+.article-sidebar:hover {
+  background: hsl(var(--accent));
+  margin: 0 -1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.article-sidebar-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 0.5rem;
+  background: hsl(var(--muted));
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.article-sidebar-content {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.article-sidebar-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 0.25rem 0;
+  color: hsl(var(--foreground));
+}
+
+.article-sidebar-meta {
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ========================================
+   PULLQUOTES AND HIGHLIGHTS
+   ======================================== */
+
+/* Large Pullquote */
+.pullquote-large {
+  grid-column: span 4;
+  font-size: var(--magazine-heading-md);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+  color: hsl(var(--primary));
+  text-align: center;
+  padding: var(--section-spacing) var(--article-spacing);
+  margin: var(--section-spacing) 0;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--accent) / 0.1) 0%,
+    hsl(var(--primary) / 0.05) 100%
+  );
+  border-radius: 1rem;
+}
+
+.pullquote-large::before,
+.pullquote-large::after {
+  content: '"';
+  font-size: 3rem;
+  font-weight: 700;
+  position: absolute;
+  color: hsl(var(--primary) / 0.3);
+  font-family: var(--font-serif);
+}
+
+.pullquote-large::before {
+  top: 1rem;
+  left: 1rem;
+}
+
+.pullquote-large::after {
+  bottom: 1rem;
+  right: 1rem;
+  transform: rotate(180deg);
+}
+
+/* Sidebar Pullquote */
+.pullquote-sidebar {
+  position: relative;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.5;
+  background: hsl(var(--muted) / 0.5);
+  border-left: 4px solid hsl(var(--primary));
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* ========================================
+   INTERACTIVE ELEMENTS
+   ======================================== */
+
+/* Category Pills */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.category-pill {
+  padding: 0.375rem 0.75rem;
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid hsl(var(--border));
+}
+
+.category-pill:hover {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Reading Time Indicator */
+.reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+}
+
+.reading-time::before {
+  content: '📖';
+  opacity: 0.7;
+}
+
+/* Author Card */
+.author-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: hsl(var(--card));
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border));
+  transition: all 0.3s ease;
+}
+
+.author-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.author-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: hsl(var(--muted));
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.author-info {
+  flex-grow: 1;
+}
+
+.author-name {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin: 0 0 0.25rem 0;
+}
+
+.author-bio {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.4;
+}
+
+/* ========================================
+   SECTION DIVIDERS
+   ======================================== */
+
+.section-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--border)) 20%,
+    hsl(var(--border)) 80%,
+    transparent 100%
+  );
+  margin: var(--section-spacing) 0;
+}
+
+.section-divider-ornate {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: calc(var(--section-spacing) * 1.5) 0;
+  position: relative;
+}
+
+.section-divider-ornate::before,
+.section-divider-ornate::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: hsl(var(--border));
+}
+
+.section-divider-ornate::before {
+  margin-right: 2rem;
+}
+
+.section-divider-ornate::after {
+  margin-left: 2rem;
+}
+
+.divider-ornament {
+  width: 2rem;
+  height: 2rem;
+  background: hsl(var(--primary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary-foreground));
+  font-weight: 700;
+}
+
+/* ========================================
+   RESPONSIVE MAGAZINE LAYOUTS
+   ======================================== */
+
+/* Mobile Layout (Stack everything) */
+@media (max-width: 768px) {
+  :root {
+    --magazine-columns: 1;
+    --magazine-gap: 1rem;
+  }
+  
+  .magazine-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .col-1, .col-2, .col-3, .col-4, 
+  .col-5, .col-6, .col-7, .col-8, 
+  .col-9, .col-10, .col-11, .col-12 {
+    grid-column: span 1;
+  }
+  
+  .layout-golden,
+  .layout-golden-reverse {
+    grid-template-columns: 1fr;
+    gap: var(--magazine-gap);
+  }
+  
+  .layout-z-pattern {
+    grid-template-areas: 
+      "hero"
+      "feature-1"
+      "feature-2"
+      "center"
+      "feature-3"
+      "feature-4"
+      "footer";
+    grid-template-columns: 1fr;
+  }
+  
+  .layout-masonry {
+    columns: 1;
+  }
+  
+  .article-hero-content {
+    max-width: 90%;
+    padding: 2rem;
+  }
+  
+  .pullquote-large {
+    grid-column: span 1;
+    padding: 1.5rem;
+    font-size: var(--magazine-heading-sm);
+  }
+  
+  .article-featured {
+    grid-template-rows: 150px 1fr;
+  }
+}
+
+/* Tablet Layout */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --magazine-columns: 8;
+    --magazine-gap: 1.5rem;
+  }
+  
+  .layout-masonry {
+    columns: 2;
+  }
+  
+  .pullquote-large {
+    grid-column: span 6;
+  }
+}
+
+/* Desktop Layout */
+@media (min-width: 1025px) {
+  .layout-masonry {
+    columns: 3;
+  }
+  
+  /* Staggered Grid Animation */
+  .magazine-container.animated > * {
+    opacity: 0;
+    transform: translateY(2rem);
+    animation: magazine-reveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  .magazine-container.animated > *:nth-child(1) { animation-delay: 0.1s; }
+  .magazine-container.animated > *:nth-child(2) { animation-delay: 0.2s; }
+  .magazine-container.animated > *:nth-child(3) { animation-delay: 0.3s; }
+  .magazine-container.animated > *:nth-child(4) { animation-delay: 0.4s; }
+  .magazine-container.animated > *:nth-child(5) { animation-delay: 0.5s; }
+  .magazine-container.animated > *:nth-child(6) { animation-delay: 0.6s; }
+}
+
+/* ========================================
+   KEYFRAMES
+   ======================================== */
+
+@keyframes magazine-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  .magazine-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: none;
+  }
+  
+  .article-hero {
+    min-height: auto;
+    background: none;
+    color: black;
+    border: 2px solid black;
+  }
+  
+  .article-featured,
+  .author-card {
+    border: 1px solid black;
+    break-inside: avoid;
+  }
+  
+  .pullquote-large {
+    border: 2px solid black;
+    background: none;
+  }
+  
+  .category-pill {
+    border: 1px solid black;
+    background: white;
+    color: black;
+  }
+}
