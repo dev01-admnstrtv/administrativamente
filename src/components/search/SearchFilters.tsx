@@ -45,7 +45,7 @@ export function SearchFilters({
             </div>
             <div className="space-y-2">
               <Button
-                variant={!selectedCategory ? 'default' : 'ghost'}
+                variant={!selectedCategory ? 'primary' : 'ghost'}
                 size="sm"
                 onClick={() => onCategoryChange('')}
                 className="h-8 w-full justify-start text-xs"
@@ -55,7 +55,7 @@ export function SearchFilters({
               {categories.map((category) => (
                 <Button
                   key={category.name}
-                  variant={selectedCategory === category.name ? 'default' : 'ghost'}
+                  variant={selectedCategory === category.name ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => onCategoryChange(
                     selectedCategory === category.name ? '' : category.name
@@ -80,7 +80,7 @@ export function SearchFilters({
               </div>
               <div className="space-y-2">
                 <Button
-                  variant={!selectedAuthor ? 'default' : 'ghost'}
+                  variant={!selectedAuthor ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => onAuthorChange('')}
                   className="h-8 w-full justify-start text-xs"
@@ -90,7 +90,7 @@ export function SearchFilters({
                 {authors.map((author) => (
                   <Button
                     key={author.name}
-                    variant={selectedAuthor === author.name ? 'default' : 'ghost'}
+                    variant={selectedAuthor === author.name ? 'primary' : 'ghost'}
                     size="sm"
                     onClick={() => onAuthorChange(
                       selectedAuthor === author.name ? '' : author.name
@@ -117,7 +117,7 @@ export function SearchFilters({
               {sortOptions.map((option) => (
                 <Button
                   key={option.value}
-                  variant={sortBy === option.value ? 'default' : 'ghost'}
+                  variant={sortBy === option.value ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => onSortChange(option.value)}
                   className="h-8 w-full justify-start gap-2 text-xs"
