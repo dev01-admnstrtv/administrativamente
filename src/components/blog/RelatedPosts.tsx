@@ -3,22 +3,10 @@ import { ArrowRight, Clock, Calendar } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-
-interface RelatedPost {
-  id: string
-  title: string
-  excerpt: string
-  category: string
-  author: {
-    name: string
-  }
-  publishedAt: string
-  readTime: number
-  slug: string
-}
+import type { BlogPost } from '@/lib/types/blog'
 
 interface RelatedPostsProps {
-  posts: RelatedPost[]
+  posts: BlogPost[]
   title?: string
   className?: string
 }
@@ -79,7 +67,7 @@ export function RelatedPosts({
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center text-muted-foreground">
                         <div className="mb-1 text-3xl">
-                          {getCategoryEmoji(post.category)}
+                          {getCategoryEmoji(post.category?.name || '')}
                         </div>
                       </div>
                     </div>
@@ -88,7 +76,7 @@ export function RelatedPosts({
                     {/* Overlay with category */}
                     <div className="absolute top-4 left-4">
                       <Badge variant="secondary" className="text-xs">
-                        {post.category}
+                        {post.category?.name || 'Sem categoria'}
                       </Badge>
                     </div>
                   </div>
@@ -110,7 +98,7 @@ export function RelatedPosts({
                       <div className="flex items-center gap-3">
                         <div className="h-6 w-6 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
                         <div className="text-xs text-muted-foreground">
-                          {post.author.name}
+                          {post.author?.name || 'Administrativa(mente)'}
                         </div>
                       </div>
                       
@@ -121,7 +109,7 @@ export function RelatedPosts({
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
-                          {post.readTime} min
+                          {post.readingTime} min
                         </div>
                       </div>
                     </div>
