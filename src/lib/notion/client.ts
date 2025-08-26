@@ -224,13 +224,7 @@ export async function validateNotionConnection(): Promise<{
     categories: false,
   }
 
-  try {
-    // Test connection by trying to retrieve user info
-    await notion.users.me()
-  } catch (error: any) {
-    errors.push(`Authentication failed: ${error.message}`)
-    return { isValid: false, errors, databases: databaseStatus }
-  }
+  // Authentication test is done implicitly when accessing databases
 
   // Test database access
   if (DATABASES.POSTS) {
