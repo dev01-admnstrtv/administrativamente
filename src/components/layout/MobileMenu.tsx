@@ -104,6 +104,10 @@ export function MobileMenu({ isOpen, onClose, onSearchOpen }: MobileMenuProps) {
         document.body.style.overflow = 'unset'
       }
     }
+    
+    return () => {
+      // Cleanup function for when isOpen is false
+    }
   }, [isOpen, onClose])
 
   const handleSearchClick = () => {
