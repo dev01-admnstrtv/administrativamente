@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { ChevronDown, Calendar, TrendingUp, Clock, AlphabeticalIcon as SortAlpha } from 'lucide-react'
+import { ChevronDown, Calendar, TrendingUp, Clock, ArrowUpDown as SortAlpha } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 

@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: process.env.NEXT_PUBLIC_SITE_URL,
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://administrativamente.vercel.app',
     siteName: 'Administrativa(mente)',
     title: 'Administrativa(mente) | Blog Premium de Gestão e Liderança',
     description: 'Blog premium sobre gestão administrativa, liderança e estratégia corporativa.',
