@@ -165,6 +165,10 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         document.body.style.overflow = 'unset'
       }
     }
+    
+    return () => {
+      // Cleanup function for when isOpen is false
+    }
   }, [isOpen, onClose, query])
 
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
