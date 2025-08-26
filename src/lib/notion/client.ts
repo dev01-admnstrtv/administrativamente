@@ -138,11 +138,16 @@ export async function getPageBlocks(pageId: string, includeChildren = false): Pr
     let cursor: string | undefined
 
     do {
-      const response = await notion.blocks.children.list({
+      const params: any = {
         block_id: pageId,
-        start_cursor: cursor,
         page_size: 100,
-      })
+      }
+      
+      if (cursor) {
+        params.start_cursor = cursor
+      }
+      
+      const response = await notion.blocks.children.list(params)
 
       const pageBlocks = response.results as NotionBlock[]
       blocks.push(...pageBlocks)

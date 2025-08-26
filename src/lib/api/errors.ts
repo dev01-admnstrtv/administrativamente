@@ -141,8 +141,8 @@ export async function withRetry<T>(
       }
       
       console.warn(`Operation failed, retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`, {
-        error: error?.message,
-        code: error?.code
+        error: (error as any)?.message,
+        code: (error as any)?.code
       })
       
       // Wait before retrying
