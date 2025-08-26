@@ -68,7 +68,8 @@ export function ThemeProvider({
       document.head.appendChild(css)
 
       // Force reflow
-      (() => window.getComputedStyle(document.body))()
+      const forceReflow = window.getComputedStyle(document.body)
+      void forceReflow
 
       // Re-enable transitions
       setTimeout(() => {
