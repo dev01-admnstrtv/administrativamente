@@ -26,7 +26,10 @@ export function SearchAutocomplete({ suggestions, query, onSelect }: SearchAutoc
         setHoveredIndex((prev) => prev > 0 ? prev - 1 : -1)
       } else if (e.key === 'Enter' && hoveredIndex >= 0) {
         e.preventDefault()
-        onSelect(suggestions[hoveredIndex])
+        const selectedSuggestion = suggestions[hoveredIndex]
+        if (selectedSuggestion) {
+          onSelect(selectedSuggestion)
+        }
       } else if (e.key === 'Escape') {
         setHoveredIndex(-1)
       }
