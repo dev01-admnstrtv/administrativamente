@@ -106,9 +106,9 @@ const PulseSpinner: React.FC<Omit<LoadingSpinnerProps, 'variant'>> = ({
   return (
     <div className={cn('flex items-center gap-1', className)}>
       <div className='flex space-x-1'>
-        <div className={cn('bg-zinc-600 rounded-full animate-pulse', sizeClasses[size])} style={{ animationDelay: '0ms' }} />
-        <div className={cn('bg-zinc-600 rounded-full animate-pulse', sizeClasses[size])} style={{ animationDelay: '150ms' }} />
-        <div className={cn('bg-zinc-600 rounded-full animate-pulse', sizeClasses[size])} style={{ animationDelay: '300ms' }} />
+        <div className={cn('bg-zinc-600 rounded-full animate-pulse', sizeClasses[size || 'md'])} style={{ animationDelay: '0ms' }} />
+        <div className={cn('bg-zinc-600 rounded-full animate-pulse', sizeClasses[size || 'md'])} style={{ animationDelay: '150ms' }} />
+        <div className={cn('bg-zinc-600 rounded-full animate-pulse', sizeClasses[size || 'md'])} style={{ animationDelay: '300ms' }} />
       </div>
       <span className='sr-only'>{label}</span>
     </div>
@@ -131,9 +131,9 @@ const DotsSpinner: React.FC<Omit<LoadingSpinnerProps, 'variant'>> = ({
 
   return (
     <div className={cn('flex items-center space-x-1', className)}>
-      <div className={cn('bg-zinc-600 rounded-full animate-bounce', sizeClasses[size])} style={{ animationDelay: '0ms' }} />
-      <div className={cn('bg-zinc-600 rounded-full animate-bounce', sizeClasses[size])} style={{ animationDelay: '150ms' }} />
-      <div className={cn('bg-zinc-600 rounded-full animate-bounce', sizeClasses[size])} style={{ animationDelay: '300ms' }} />
+      <div className={cn('bg-zinc-600 rounded-full animate-bounce', sizeClasses[size || 'md'])} style={{ animationDelay: '0ms' }} />
+      <div className={cn('bg-zinc-600 rounded-full animate-bounce', sizeClasses[size || 'md'])} style={{ animationDelay: '150ms' }} />
+      <div className={cn('bg-zinc-600 rounded-full animate-bounce', sizeClasses[size || 'md'])} style={{ animationDelay: '300ms' }} />
       <span className='sr-only'>{label}</span>
     </div>
   )
