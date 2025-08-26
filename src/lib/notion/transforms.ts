@@ -148,8 +148,9 @@ export function transformNotionPost(
   } else if (notionPost.properties.Author && notionPost.properties.Author.relation && notionPost.properties.Author.relation.length > 0) {
     // Author exists as relation - would need to fetch the full author data
     // For now, create a minimal author object
+    const authorRelation = notionPost.properties.Author.relation[0]!
     authorInfo = {
-      id: notionPost.properties.Author.relation[0].id,
+      id: authorRelation.id,
       name: 'Autor', // We'd need to fetch this
       slug: 'autor',
       bio: '',
@@ -157,7 +158,7 @@ export function transformNotionPost(
       avatar: null,
       socialLinks: {},
       notion: {
-        pageId: notionPost.properties.Author.relation[0].id,
+        pageId: authorRelation.id,
         lastEditedTime: notionPost.last_edited_time,
         url: ''
       }
