@@ -78,14 +78,22 @@ export function generateSEOMeta({
 
   // Add article-specific metadata
   if (type === 'article' && publishedTime) {
-    metadata.openGraph = {
+    const articleMeta: any = {
       ...metadata.openGraph,
       type: 'article',
       publishedTime,
       modifiedTime: modifiedTime || publishedTime,
-      authors: author ? [author] : undefined,
-      tags: tags.length > 0 ? tags : undefined,
     }
+    
+    if (author) {
+      articleMeta.authors = [author]
+    }
+    
+    if (tags.length > 0) {
+      articleMeta.tags = tags
+    }
+    
+    metadata.openGraph = articleMeta
   }
 
   return metadata
