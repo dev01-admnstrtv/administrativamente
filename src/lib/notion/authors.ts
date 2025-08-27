@@ -1,4 +1,4 @@
-agora facaimport { 
+import { 
   queryDatabase, 
   getPage, 
   DATABASES 
