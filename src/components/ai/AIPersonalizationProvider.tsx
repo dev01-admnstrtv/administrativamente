@@ -186,31 +186,61 @@ export function useActionTracking() {
   const { trackAction, isLoading } = useAIPersonalization()
   
   const trackRead = (target: string, data?: Record<string, any>, duration?: number) => {
-    trackAction({ type: 'read', target, data, duration })
+    trackAction({ 
+      type: 'read', 
+      target, 
+      ...(data !== undefined && { data }),
+      ...(duration !== undefined && { duration })
+    })
   }
   
   const trackClick = (target: string, data?: Record<string, any>) => {
-    trackAction({ type: 'click', target, data })
+    trackAction({ 
+      type: 'click', 
+      target,
+      ...(data !== undefined && { data })
+    })
   }
   
   const trackSearch = (target: string, data?: Record<string, any>) => {
-    trackAction({ type: 'search', target, data })
+    trackAction({ 
+      type: 'search', 
+      target,
+      ...(data !== undefined && { data })
+    })
   }
   
   const trackShare = (target: string, data?: Record<string, any>) => {
-    trackAction({ type: 'share', target, data })
+    trackAction({ 
+      type: 'share', 
+      target,
+      ...(data !== undefined && { data })
+    })
   }
   
   const trackBookmark = (target: string, data?: Record<string, any>) => {
-    trackAction({ type: 'bookmark', target, data })
+    trackAction({ 
+      type: 'bookmark', 
+      target,
+      ...(data !== undefined && { data })
+    })
   }
   
   const trackHover = (target: string, data?: Record<string, any>, duration?: number) => {
-    trackAction({ type: 'hover', target, data, duration })
+    trackAction({ 
+      type: 'hover', 
+      target,
+      ...(data !== undefined && { data }),
+      ...(duration !== undefined && { duration })
+    })
   }
   
   const trackScroll = (target: string, data?: Record<string, any>) => {
-    trackAction({ type: 'scroll', target, data })
+    trackAction({ 
+      type: 'scroll', 
+      target,
+      ...(data !== undefined && { data })
+    })
   }
   
   return {
