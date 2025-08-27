@@ -147,7 +147,7 @@ export default async function HomePage() {
               title: post.title,
               excerpt: post.excerpt,
               slug: post.slug,
-              image: post.image || '/api/placeholder/600/400',
+              image: post.featuredImage || '/api/placeholder/600/400',
               category: {
                 name: post.category?.name || 'Gestão',
                 color: '#3b82f6'
@@ -167,7 +167,7 @@ export default async function HomePage() {
                   {/* Image */}
                   <div className="micro-image-zoom relative h-48 overflow-hidden">
                     <Image
-                      src={post.image || '/api/placeholder/600/400'}
+                      src={post.image}
                       alt={post.title}
                       fill
                       className="object-cover transition-transform group-hover:scale-105"
