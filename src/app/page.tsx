@@ -1,12 +1,12 @@
-import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, TrendingUp, Clock, Calendar, User } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight, TrendingUp, Users, Target, Clock, ArrowUpRight } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { getFeaturedPosts, getRecentPosts, getCategoryStats } from '@/lib/notion/posts'
-import { getAllCategories } from '@/lib/notion/categories'
 import { transformNotionPost } from '@/lib/notion/transforms'
 
-// Helper function to format dates
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('pt-BR', {
     year: 'numeric',
@@ -16,319 +16,359 @@ function formatDate(dateString: string) {
 }
 
 export default async function HomePage() {
-  try {
-    const [featuredPostsData, recentPostsData, categoriesData, categoryStats] = await Promise.all([
-      getFeaturedPosts(3),
-      getRecentPosts(9),
-      getAllCategories(),
-      getCategoryStats()
-    ])
+  // Fetch real data from Notion
+  const [featuredPostsRaw, recentPostsRaw, categoryStats] = await Promise.all([
+    getFeaturedPosts(1),
+    getRecentPosts(6),
+    getCategoryStats()
+  ])
 
-    const featuredPosts = featuredPostsData.map(post => transformNotionPost(post))
-    const recentPosts = recentPostsData.map(post => transformNotionPost(post))
-    const categories = categoriesData
+  // Transform Notion data to BlogPost format
+  const featuredPosts = featuredPostsRaw.map(post => transformNotionPost(post))
+  const recentPosts = recentPostsRaw.map(post => transformNotionPost(post))
 
-    return (
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <div className="container">
-            <div className="hero-content animate-fade-in">
-              <div className="flex items-center justify-center mb-6">
-                <div className="glass-card px-4 py-2 rounded-full">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="https://administrative.com.br/img/Lampada.png"
-                      alt="Administrativa(mente)"
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
-                    />
-                    <span className="text-sm font-medium">Premium Business Insights</span>
+  const featuredPost = featuredPosts[0]
+  const categories = categoryStats.map(cat => ({
+    name: cat.name,
+    count: cat.count,
+    icon: cat.name === 'Gestão' ? Target : 
+          cat.name === 'Liderança' ? Users :
+          cat.name === 'Estratégia' ? TrendingUp : ArrowUpRight,
+    color: cat.name === 'Gestão' ? 'blue' : 
+           cat.name === 'Liderança' ? 'purple' :
+           cat.name === 'Estratégia' ? 'green' : 'orange'
+  }))
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100/50 dark:from-zinc-950 dark:to-zinc-900/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-zinc-100/20 to-zinc-200/30 dark:via-zinc-800/20 dark:to-zinc-700/30" />
+        
+        <div className="container relative px-4 py-20 lg:py-32">
+          <div className="mx-auto max-w-4xl text-center">
+            {/* Premium Badge */}
+            <div className="mb-8 flex justify-center">
+              <Badge variant="premium" className="px-4 py-2 text-sm font-medium">
+                ✨ Premium Business Insights
+              </Badge>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="mb-6 font-serif text-4xl font-bold leading-tight tracking-tight text-foreground lg:text-6xl xl:text-7xl">
+              Transforme sua
+              <span className="relative mx-3 text-zinc-600 dark:text-zinc-400">
+                gestão
+                <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-zinc-900/20 to-zinc-600/20 dark:from-zinc-100/20 dark:to-zinc-400/20" />
+              </span>
+              em vantagem competitiva
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mb-10 text-lg leading-relaxed text-muted-foreground lg:text-xl">
+              Insights estratégicos, metodologias comprovadas e ferramentas práticas 
+              para líderes que buscam excelência operacional e resultados extraordinários.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                size="lg"
+                variant="premium"
+                className="group h-14 px-8 text-base font-semibold"
+                asChild
+              >
+                <Link href="/newsletter">
+                  Receber Insights Exclusivos
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+              
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-14 px-8 text-base"
+                asChild
+              >
+                <Link href="#featured">
+                  Explorar Conteúdo
+                </Link>
+              </Button>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-16 grid grid-cols-2 gap-8 lg:grid-cols-4">
+              {categories.map((category) => {
+                const Icon = category.icon
+                return (
+                  <div key={category.name} className="text-center">
+                    <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-white/50 shadow-premium dark:bg-zinc-900/50">
+                      <Icon className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <div className="font-serif text-2xl font-bold text-foreground lg:text-3xl">
+                      {category.count}+
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Artigos {category.name}
+                    </div>
                   </div>
-                </div>
-              </div>
-              
-              <h1 className="hero-title heading-hero">
-                Administrativa
-                <span className="text-blue-600">(mente)</span>
-              </h1>
-              
-              <p className="hero-subtitle text-body">
-                Transforme sua visão estratégica em resultados excepcionais. 
-                Insights premium sobre gestão, liderança e inovação corporativa para executivos de alto nível.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
-                <Link href="/newsletter" className="w-full sm:w-auto">
-                  <button className="glass-interactive w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all flex items-center justify-center gap-2">
-                    Receber Insights Exclusivos
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
-                
-                <Link href="#featured-content" className="w-full sm:w-auto">
-                  <button className="glass-interactive w-full sm:w-auto px-8 py-4 rounded-xl font-medium border border-gray-200 hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
-                    Explorar Conteúdo
-                    <TrendingUp className="w-4 h-4" />
-                  </button>
-                </Link>
-              </div>
+                )
+              })}
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Featured Content Section */}
-        <section id="featured-content" className="py-16 lg:py-24">
-          <div className="container">
-            <div className="text-center mb-12 animate-slide-up">
-              <h2 className="heading-section mb-4">
-                Insights Selecionados
+      {/* Featured Post Section */}
+      {featuredPost && (
+        <section id="featured" className="py-16 lg:py-24">
+          <div className="container px-4">
+            <div className="mb-12 text-center">
+              <Badge variant="outline" className="mb-4">
+                Em Destaque
+              </Badge>
+              <h2 className="font-serif text-3xl font-bold text-foreground lg:text-4xl">
+                Leitura Essencial
               </h2>
-              <p className="text-body text-muted-foreground max-w-2xl mx-auto">
-                Conteúdo premium curado especialmente para acelerar sua evolução como líder
-              </p>
             </div>
 
-            {/* Featured Posts Grid */}
-            {featuredPosts.length > 0 && (
-              <div className="grid-featured mb-16 animate-scale-in">
-                {/* Main Featured Post */}
-                <article className="post-card group">
-                  <div className="relative overflow-hidden rounded-t-xl">
-                    <Image
-                      src={featuredPosts[0]?.featuredImage || '/api/placeholder/600/400'}
-                      alt={featuredPosts[0]?.title || 'Featured post'}
-                      width={600}
-                      height={400}
-                      className="post-image"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-blue-600 text-white">
-                        Destaque
-                      </Badge>
-                    </div>
+            <Card variant="premium" className="group cursor-pointer overflow-hidden border-0 p-0 shadow-premium-xl hover:-translate-y-2 hover:shadow-premium-xl">
+              <Link href={`/post/${featuredPost.slug}`}>
+                <div className="grid gap-0 lg:grid-cols-2">
+                  {/* Image */}
+                  <div className="relative overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900">
+                    {featuredPost.featuredImage ? (
+                      <Image
+                        src={featuredPost.featuredImage}
+                        alt={featuredPost.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center text-muted-foreground">
+                          <div className="mb-2 text-4xl">📊</div>
+                          <div className="text-sm">Imagem em breve</div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="aspect-[4/3] lg:aspect-[1/1]" />
                   </div>
-                  
-                  <div className="post-content">
-                    <div className="flex items-center gap-4 mb-3 text-small text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {formatDate(featuredPosts[0]?.publishedAt || new Date().toISOString())}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {featuredPosts[0]?.readingTime || 5} min
+
+                  {/* Content */}
+                  <div className="flex flex-col justify-center p-8 lg:p-12">
+                    <div className="mb-4 flex items-center gap-3">
+                      <Badge variant="secondary">{featuredPost.category?.name || 'Sem categoria'}</Badge>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4" />
+                        {featuredPost.readingTime} min
                       </div>
                     </div>
-                    
-                    <h3 className="post-title text-xl lg:text-2xl group-hover:text-blue-600 transition-colors">
-                      <Link href={`/post/${featuredPosts[0]?.slug || 'post'}`}>
-                        {featuredPosts[0]?.title || 'Untitled'}
-                      </Link>
+
+                    <h3 className="mb-4 font-serif text-2xl font-bold leading-tight text-foreground lg:text-3xl">
+                      {featuredPost.title}
                     </h3>
-                    
-                    <p className="post-excerpt text-body">
-                      {featuredPosts[0]?.excerpt || 'No excerpt available.'}
+
+                    <p className="mb-6 text-muted-foreground leading-relaxed lg:text-lg">
+                      {featuredPost.excerpt}
                     </p>
-                    
-                    <div className="post-meta">
-                      <div className="flex items-center gap-2">
-                        {featuredPosts[0]?.author?.avatar && (
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {featuredPost.author?.avatar ? (
                           <Image
-                            src={featuredPosts[0]?.author?.avatar || ''}
-                            alt={featuredPosts[0]?.author?.name || 'Author'}
-                            width={24}
-                            height={24}
+                            src={featuredPost.author.avatar}
+                            alt={featuredPost.author.name}
+                            width={40}
+                            height={40}
                             className="rounded-full"
                           />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
                         )}
-                        <span className="text-small font-medium">
-                          {featuredPosts[0]?.author?.name || 'Admin'}
-                        </span>
+                        <div>
+                          <div className="font-semibold text-foreground">
+                            {featuredPost.author?.name || 'Autor'}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {formatDate(featuredPost.publishedAt)}
+                          </div>
+                        </div>
                       </div>
-                      
-                      <Badge variant="secondary">
-                        {featuredPosts[0]?.category?.name || 'Gestão'}
-                      </Badge>
+
+                      <ArrowRight className="h-6 w-6 text-muted-foreground transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
-                </article>
-
-                {/* Secondary Featured Posts */}
-                <div className="space-y-6">
-                  {featuredPosts.slice(1, 3).map((post, index) => (
-                    <article key={post.slug} className="post-card group flex gap-4">
-                      <div className="relative overflow-hidden rounded-xl flex-shrink-0">
-                        <Image
-                          src={post.featuredImage || '/api/placeholder/300/200'}
-                          alt={post.title}
-                          width={150}
-                          height={100}
-                          className="w-24 h-16 sm:w-32 sm:h-20 lg:w-40 lg:h-24 object-cover transition-transform group-hover:scale-105"
-                        />
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(post.publishedAt)}
-                          <span>•</span>
-                          <Clock className="w-3 h-3" />
-                          {post.readingTime} min
-                        </div>
-                        
-                        <h3 className="font-semibold text-sm sm:text-base line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">
-                          <Link href={`/post/${post.slug}`}>
-                            {post.title}
-                          </Link>
-                        </h3>
-                        
-                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
-                          {post.excerpt}
-                        </p>
-                      </div>
-                    </article>
-                  ))}
                 </div>
-              </div>
-            )}
+              </Link>
+            </Card>
           </div>
         </section>
+      )}
 
-        {/* Recent Posts Section */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <div className="text-center mb-12">
-              <h2 className="heading-section mb-4">
-                Últimas Publicações
+      {/* Articles Grid */}
+      <section className="bg-zinc-50/50 py-16 dark:bg-zinc-950/50 lg:py-24">
+        <div className="container px-4">
+          <div className="mb-12 flex items-center justify-between">
+            <div>
+              <h2 className="font-serif text-3xl font-bold text-foreground lg:text-4xl">
+                Artigos Recentes
               </h2>
-              <p className="text-body text-muted-foreground max-w-2xl mx-auto">
-                Mantenha-se atualizado com nossos insights mais recentes
+              <p className="mt-2 text-muted-foreground lg:text-lg">
+                Conteúdo exclusivo para líderes visionários
               </p>
             </div>
+            
+            <Button variant="ghost" asChild>
+              <Link href="/posts">
+                Ver todos
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
 
-            <div className="grid-posts">
-              {recentPosts.map((post, index) => (
-                <article key={post.slug} className="post-card group animate-fade-in">
-                  <div className="relative overflow-hidden rounded-t-xl">
-                    <Image
-                      src={post.featuredImage || '/api/placeholder/400/250'}
-                      alt={post.title}
-                      width={400}
-                      height={250}
-                      className="post-image"
-                    />
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {recentPosts.map((post) => (
+              <Card 
+                key={post.id} 
+                variant="default"
+                className="group cursor-pointer overflow-hidden border-0 p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-premium-lg"
+              >
+                <Link href={`/post/${post.slug}`}>
+                  {/* Image */}
+                  <div className="relative overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900">
+                    {post.featuredImage ? (
+                      <Image
+                        src={post.featuredImage}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center text-muted-foreground">
+                          <div className="mb-1 text-2xl">
+                            {post.category?.name === 'Liderança' && '👥'}
+                            {post.category?.name === 'Gestão' && '⚙️'}
+                            {post.category?.name === 'Estratégia' && '🎯'}
+                            {post.category?.name === 'Pessoas' && '🤝'}
+                            {post.category?.name === 'Tecnologia' && '💻'}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="aspect-[16/10]" />
                   </div>
-                  
-                  <div className="post-content">
-                    <div className="flex items-center justify-between mb-3">
+
+                  {/* Content */}
+                  <div className="p-6">
+                    <div className="mb-3 flex items-center justify-between">
                       <Badge variant="secondary" className="text-xs">
-                        {post.category?.name || 'Gestão'}
+                        {post.category?.name || 'Sem categoria'}
                       </Badge>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" />
+                        <Clock className="h-3 w-3" />
                         {post.readingTime} min
                       </div>
                     </div>
-                    
-                    <h3 className="post-title group-hover:text-blue-600 transition-colors">
-                      <Link href={`/post/${post.slug}`}>
-                        {post.title}
-                      </Link>
+
+                    <h3 className="mb-3 font-serif text-lg font-bold leading-tight text-foreground group-hover:text-zinc-600 dark:group-hover:text-zinc-300">
+                      {post.title}
                     </h3>
-                    
-                    <p className="post-excerpt">
+
+                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
                       {post.excerpt}
                     </p>
-                    
-                    <div className="post-meta">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        <span>{post.author?.name || 'Admin'}</span>
+
+                    <div className="flex items-center gap-3">
+                      {post.author?.avatar ? (
+                        <Image
+                          src={post.author.avatar}
+                          alt={post.author.name}
+                          width={32}
+                          height={32}
+                          className="rounded-full"
+                        />
+                      ) : (
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
+                      )}
+                      <div>
+                        <div className="text-sm font-medium text-foreground">
+                          {post.author?.name || 'Autor'}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatDate(post.publishedAt)}
+                        </div>
                       </div>
-                      <span>{formatDate(post.publishedAt)}</span>
                     </div>
                   </div>
-                </article>
-              ))}
-            </div>
+                </Link>
+              </Card>
+            ))}
           </div>
-        </section>
-
-        {/* Categories Section */}
-        {categories.length > 0 && (
-          <section className="py-16">
-            <div className="container">
-              <div className="text-center mb-12">
-                <h2 className="heading-section mb-4">
-                  Explore por Categoria
-                </h2>
-                <p className="text-body text-muted-foreground max-w-2xl mx-auto">
-                  Navegue pelos nossos tópicos especializados
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {categories.slice(0, 4).map((category, index) => {
-                  const categoryName = category.properties?.Name?.title?.[0]?.plain_text || 'Category'
-                  const categorySlug = category.properties?.Slug?.rich_text?.[0]?.plain_text || 'category'
-                  const categoryDescription = category.properties?.Description?.rich_text?.[0]?.plain_text || 'No description available'
-                  const stats = categoryStats.find(stat => stat.name === categoryName)
-                  return (
-                    <Link
-                      key={category.id || index}
-                      href={`/category/${categorySlug}`}
-                      className="glass-interactive p-6 text-center group"
-                    >
-                      <div className="text-3xl mb-3">📊</div>
-                      <h3 className="font-semibold mb-2 group-hover:text-blue-600 transition-colors">
-                        {categoryName}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {categoryDescription}
-                      </p>
-                      <Badge variant="outline" className="text-xs">
-                        {stats?.count || 0} posts
-                      </Badge>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Newsletter CTA */}
-        <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-          <div className="container text-center">
-            <div className="max-w-2xl mx-auto">
-              <h2 className="heading-section mb-4 text-white">
-                Não Perca Nenhum Insight
-              </h2>
-              <p className="text-body mb-8 text-blue-100">
-                Receba semanalmente os melhores conteúdos sobre gestão e liderança diretamente no seu e-mail
-              </p>
-              <Link href="/newsletter">
-                <button className="glass-card px-8 py-4 rounded-xl font-semibold text-blue-600 bg-white hover:bg-gray-50 transition-all inline-flex items-center gap-2">
-                  Inscrever-se Gratuitamente
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-            </div>
-          </div>
-        </section>
-      </div>
-    )
-  } catch (error) {
-    console.error('Error loading homepage data:', error)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Erro ao carregar página</h1>
-          <p className="text-muted-foreground">Tente novamente em alguns instantes.</p>
         </div>
-      </div>
-    )
-  }
+      </section>
+
+      {/* Newsletter CTA */}
+      <section className="py-16 lg:py-24">
+        <div className="container px-4">
+          <div className="mx-auto max-w-4xl">
+            <Card variant="premium" className="relative overflow-hidden border-0 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white dark:from-zinc-100 dark:to-zinc-200 dark:text-zinc-900">
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10 dark:via-black/5 dark:to-black/10" />
+              
+              <CardContent className="relative p-8 text-center lg:p-12">
+                <div className="mb-6 flex justify-center">
+                  <div className="rounded-full bg-white/10 p-4 dark:bg-black/10">
+                    <TrendingUp className="h-8 w-8" />
+                  </div>
+                </div>
+
+                <h2 className="mb-4 font-serif text-3xl font-bold lg:text-4xl">
+                  Fique à Frente da Concorrência
+                </h2>
+                
+                <p className="mb-8 text-lg text-white/80 dark:text-zinc-700 leading-relaxed">
+                  Receba semanalmente insights exclusivos, frameworks práticos e 
+                  estudos de caso reais direto na sua caixa de entrada.
+                </p>
+
+                <div className="mb-6">
+                  <ul className="inline-flex flex-wrap items-center gap-6 text-sm text-white/90 dark:text-zinc-600">
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                      Conteúdo Exclusivo
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                      Sem Spam
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                      Cancele a Qualquer Momento
+                    </li>
+                  </ul>
+                </div>
+
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="group h-14 bg-white text-zinc-900 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+                  asChild
+                >
+                  <Link href="/newsletter">
+                    Quero Receber Insights Exclusivos
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+
+                <p className="mt-4 text-xs text-white/60 dark:text-zinc-500">
+                  Junte-se a mais de 2.500 líderes que já transformaram sua gestão
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
 }

@@ -6,7 +6,7 @@ import { transformNotionPost } from '@/lib/notion/transforms'
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
+    const { searchParams } = new URL(request.url)
     const query = searchParams.get('q') || ''
     const category = searchParams.get('category')
     const author = searchParams.get('author')
