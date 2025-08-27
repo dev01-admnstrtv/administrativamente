@@ -410,7 +410,7 @@ export function AnalyticsWidget({ className = "" }: { className?: string }) {
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="text-xs font-medium mb-2">Tópicos preferidos:</div>
           <div className="flex flex-wrap gap-1">
-            {analytics.behavior.topTopics.slice(0, 3).map(([topic, count]) => (
+            {analytics.behavior.topTopics.slice(0, 3).map(([topic, count]: [string, number]) => (
               <Badge key={topic} variant="secondary" className="text-xs">
                 {topic} ({count})
               </Badge>

@@ -376,7 +376,7 @@ export class PersonalizationEngine {
 
       // Topic affinity scoring
       if (content.category && topicAffinity[content.category]) {
-        score += topicAffinity[content.category] * 0.4
+        score += (topicAffinity[content.category] || 0) * 0.4
       }
 
       // Reading time preference

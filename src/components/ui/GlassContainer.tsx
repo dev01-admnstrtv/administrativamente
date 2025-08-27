@@ -14,9 +14,10 @@ interface GlassContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   className?: string
   asChild?: boolean
+  ref?: React.Ref<HTMLDivElement>
 }
 
-export function GlassContainer({
+export const GlassContainer = React.forwardRef<HTMLDivElement, Omit<GlassContainerProps, 'ref'>>(({
   layer = 2,
   variant = 'base',
   effects = [],
@@ -24,8 +25,11 @@ export function GlassContainer({
   className,
   asChild,
   ...props
-}: GlassContainerProps) {
+}, ref) => {
   const containerRef = React.useRef<HTMLDivElement>(null)
+  
+  // Combine the refs
+  React.useImperativeHandle(ref, () => containerRef.current!, []);
 
   // Handle reactive glass mouse tracking
   React.useEffect(() => {
@@ -94,7 +98,9 @@ export function GlassContainer({
       {children}
     </div>
   )
-}
+})
+
+GlassContainer.displayName = 'GlassContainer'
 
 // Specialized Glass Card Component
 interface GlassCardProps extends Omit<GlassContainerProps, 'variant'> {

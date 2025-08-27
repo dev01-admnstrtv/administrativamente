@@ -72,6 +72,7 @@ export function FocusReader({ content, title, isOpen, onClose, className = "" }:
       element.addEventListener('scroll', handleScroll)
       return () => element.removeEventListener('scroll', handleScroll)
     }
+    return undefined
   }, [handleScroll])
 
   // Transform content with bionic reading

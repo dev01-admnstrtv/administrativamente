@@ -7,11 +7,13 @@ import { cn } from '@/lib/utils'
 export function useInView(threshold = 0.1) {
   const [isInView, setIsInView] = React.useState(false)
   const [hasBeenInView, setHasBeenInView] = React.useState(false)
-  const ref = React.useRef<HTMLElement>(null)
+  const ref = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
+      (entries) => {
+        const entry = entries[0]
+        if (!entry) return
         const inView = entry.isIntersecting
         setIsInView(inView)
         if (inView && !hasBeenInView) {
@@ -218,6 +220,7 @@ export function AnimatedText({
       const timeout = setTimeout(() => setIsVisible(true), delay)
       return () => clearTimeout(timeout)
     }
+    return undefined
   }, [hasBeenInView, delay])
 
   const animationClasses = {
@@ -264,6 +267,7 @@ export function MorphIcon({
       }, 2000)
       return () => clearInterval(interval)
     }
+    return undefined
   }, [trigger])
 
   const handleInteraction = () => {
@@ -394,11 +398,17 @@ export function useSwipeGesture(onSwipe: (direction: 'left' | 'right') => void) 
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
-    setTouchStart(e.targetTouches[0].clientX)
+    const touch = e.targetTouches[0]
+    if (touch) {
+      setTouchStart(touch.clientX)
+    }
   }
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
+    const touch = e.targetTouches[0]
+    if (touch) {
+      setTouchEnd(touch.clientX)
+    }
   }
 
   const onTouchEnd = () => {
