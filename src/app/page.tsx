@@ -161,52 +161,6 @@ export default async function HomePage() {
               readingTime: post.readingTime,
               featured: featuredPosts.includes(post)
             }))}
-            renderItem={(post, index) => (
-              <MicroCard key={post.id} effect="tilt" intensity="subtle">
-                <GlassCard className="group h-full overflow-hidden">
-                  {/* Image */}
-                  <div className="micro-image-zoom relative h-48 overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="mb-3 flex items-center justify-between">
-                      <Badge variant="secondary">{post.category?.name || 'Gestão'}</Badge>
-                      <span className="flex items-center text-sm text-muted-foreground">
-                        <Clock className="mr-1 h-3 w-3" />
-                        {post.readingTime} min
-                      </span>
-                    </div>
-                    
-                    <h3 className="mb-3 font-serif text-lg font-semibold line-clamp-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h3>
-                    
-                    <p className="mb-4 text-sm text-muted-foreground line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="text-xs text-muted-foreground">
-                        {formatDate(post.publishedAt)}
-                      </div>
-                      
-                      <Link href={`/post/${post.slug}`}>
-                        <MicroButton variant="magnetic" className="glass-interactive p-2 rounded-lg">
-                          <ArrowRight className="h-4 w-4" />
-                        </MicroButton>
-                      </Link>
-                    </div>
-                  </div>
-                </GlassCard>
-              </MicroCard>
-            )}
             className="lg:ml-80"
           />
 

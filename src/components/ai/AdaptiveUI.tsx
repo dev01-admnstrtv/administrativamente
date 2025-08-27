@@ -16,6 +16,11 @@ import {
   Monitor,
   Tablet
 } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { MicroCard } from '@/components/ui/MicroInteractions'
+import { GlassCard } from '@/components/ui/GlassContainer'
+import { Badge } from '@/components/ui/Badge'
 
 interface AdaptiveUIProps {
   children: React.ReactNode
@@ -391,13 +396,11 @@ export function ContextualAdapter({ pageType, children }: ContextualAdapterProps
 // Smart Content Organizer - reorganizes content based on user behavior
 interface SmartContentOrganizerProps {
   items: any[]
-  renderItem: (item: any, index: number) => React.ReactNode
   className?: string
 }
 
 export function SmartContentOrganizer({ 
   items, 
-  renderItem, 
   className = "" 
 }: SmartContentOrganizerProps) {
   const { engine } = useAIPersonalization()
@@ -451,7 +454,70 @@ export function SmartContentOrganizer({
             transition={{ delay: index * 0.05 }}
             className={index < 3 ? 'priority-item' : 'regular-item'}
           >
-            {renderItem(item, index)}
+            <MicroCard effect="tilt" intensity="subtle">
+              <GlassCard className="group h-full overflow-hidden">
+                {/* Image */}
+                <div className="micro-image-zoom relative h-48 overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
+                </div>
+                
+                {/* Content */}
+                <div className="p-6">
+                  <div className="mb-3 flex items-center justify-between">
+                    <Badge 
+                      variant="secondary" 
+                      className="micro-badge-glow text-xs"
+                      style={{ 
+                        backgroundColor: `${item.category?.color}15`,
+                        color: item.category?.color || '#3b82f6',
+                        borderColor: `${item.category?.color}30`
+                      }}
+                    >
+                      {item.category?.name}
+                    </Badge>
+                    <span className="text-xs text-zinc-500">
+                      {item.readingTime} min
+                    </span>
+                  </div>
+                  
+                  <h3 className="mb-3 line-clamp-2 text-lg font-bold transition-colors group-hover:text-blue-600">
+                    <Link href={`/post/${item.slug}`}>
+                      {item.title}
+                    </Link>
+                  </h3>
+                  
+                  <p className="mb-4 line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400">
+                    {item.excerpt}
+                  </p>
+                  
+                  {/* Author */}
+                  <div className="flex items-center gap-3">
+                    {item.author?.avatar && (
+                      <Image
+                        src={item.author.avatar}
+                        alt={item.author.name}
+                        width={24}
+                        height={24}
+                        className="rounded-full"
+                      />
+                    )}
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                        {item.author?.name}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {new Date(item.publishedAt).toLocaleDateString('pt-BR')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </GlassCard>
+            </MicroCard>
             
             {index < 3 && (
               <div className="absolute top-2 right-2">
