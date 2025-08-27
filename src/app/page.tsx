@@ -8,6 +8,8 @@ import { GlassContainer, GlassCard } from '@/components/ui/GlassContainer'
 import { MicroButton, MicroCard, AnimatedText, StaggerContainer, MorphIcon } from '@/components/ui/MicroInteractions'
 import { Hero3D } from '@/components/ui/Hero3D'
 import { MagazineLayout } from '@/components/ui/MagazineLayout'
+import { SmartRecommendations, ContentDiscovery, AnalyticsWidget } from '@/components/ai/SmartRecommendations'
+import { ContextualAdapter, SmartContentOrganizer } from '@/components/ai/AdaptiveUI'
 import { getFeaturedPosts, getRecentPosts, getCategoryStats } from '@/lib/notion/posts'
 import { transformNotionPost } from '@/lib/notion/transforms'
 
@@ -44,14 +46,26 @@ export default async function HomePage() {
   }))
 
   return (
-    <div className="min-h-screen">
-      {/* 3D Hero Section */}
-      <Hero3D
-        title="Transforme sua gestão em vantagem competitiva"
-        subtitle="Insights estratégicos, metodologias comprovadas e ferramentas práticas para líderes que buscam excelência operacional e resultados extraordinários."
-        enableParallax={true}
-        className="relative"
-      >
+    <ContextualAdapter pageType="home">
+      <div className="min-h-screen">
+        {/* Smart Recommendations Sidebar */}
+        <div className="fixed top-20 left-4 z-30 max-w-xs hidden lg:block">
+          <SmartRecommendations 
+            maxRecommendations={3}
+            compact={true}
+            showConfidence={true}
+            className="mb-4"
+          />
+          <AnalyticsWidget className="mb-4" />
+        </div>
+
+        {/* 3D Hero Section */}
+        <Hero3D
+          title="Transforme sua gestão em vantagem competitiva"
+          subtitle="Insights estratégicos, metodologias comprovadas e ferramentas práticas para líderes que buscam excelência operacional e resultados extraordinários."
+          enableParallax={true}
+          className="relative"
+        >
         {/* Premium Badge with Glass Effect */}
         <div className="mb-12 flex justify-center">
           <GlassContainer 
@@ -118,9 +132,17 @@ export default async function HomePage() {
             </AnimatedText>
           </div>
 
-          {/* Magazine Layout */}
-          <MagazineLayout 
-            posts={[...featuredPosts, ...recentPosts].map(post => ({
+          {/* AI-Powered Content Discovery */}
+          <div className="lg:ml-80">
+            <ContentDiscovery 
+              posts={[...featuredPosts, ...recentPosts]}
+              className="mb-12"
+            />
+          </div>
+
+          {/* Smart Content Organization */}
+          <SmartContentOrganizer
+            items={[...featuredPosts, ...recentPosts].map(post => ({
               id: post.slug,
               title: post.title,
               excerpt: post.excerpt,
@@ -139,8 +161,53 @@ export default async function HomePage() {
               readingTime: post.readingTime,
               featured: featuredPosts.includes(post)
             }))}
-            layout="standard"
-            animated={true}
+            renderItem={(post, index) => (
+              <MicroCard key={post.id} effect="tilt" intensity="subtle">
+                <GlassCard className="group h-full overflow-hidden">
+                  {/* Image */}
+                  <div className="micro-image-zoom relative h-48 overflow-hidden">
+                    <Image
+                      src={post.image || '/api/placeholder/600/400'}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-6">
+                    <div className="mb-3 flex items-center justify-between">
+                      <Badge variant="secondary">{post.category?.name || 'Gestão'}</Badge>
+                      <span className="flex items-center text-sm text-muted-foreground">
+                        <Clock className="mr-1 h-3 w-3" />
+                        {post.readingTime} min
+                      </span>
+                    </div>
+                    
+                    <h3 className="mb-3 font-serif text-lg font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h3>
+                    
+                    <p className="mb-4 text-sm text-muted-foreground line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs text-muted-foreground">
+                        {formatDate(post.publishedAt)}
+                      </div>
+                      
+                      <Link href={`/post/${post.slug}`}>
+                        <MicroButton variant="magnetic" className="glass-interactive p-2 rounded-lg">
+                          <ArrowRight className="h-4 w-4" />
+                        </MicroButton>
+                      </Link>
+                    </div>
+                  </div>
+                </GlassCard>
+              </MicroCard>
+            )}
+            className="lg:ml-80"
           />
 
           {/* Categories Section - Redesigned */}
@@ -218,6 +285,18 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-    </div>
+
+      {/* Mobile Smart Recommendations */}
+      <div className="lg:hidden px-4 py-8">
+        <SmartRecommendations 
+          maxRecommendations={3}
+          compact={false}
+          showConfidence={true}
+          className="mb-6"
+        />
+      </div>
+      
+      </div>
+    </ContextualAdapter>
   )
 }

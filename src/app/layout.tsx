@@ -4,6 +4,8 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { TypographyProvider, TypographyController } from '@/components/ui/TypographyController'
+import { AIPersonalizationProvider } from '@/components/ai/AIPersonalizationProvider'
+import { AdaptiveUI, DeviceAwareComponent } from '@/components/ai/AdaptiveUI'
 import './globals.css'
 
 // Inter Variable for sans-serif (Apple-inspired)
@@ -94,14 +96,20 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           <TypographyProvider>
-            <div className='relative flex min-h-screen flex-col'>
-              <Header />
-              <main className='flex-1'>{children}</main>
-              <Footer />
-            </div>
-            
-            {/* Typography Controller - Premium Reading Experience */}
-            <TypographyController />
+            <AIPersonalizationProvider enableTracking={true}>
+              <DeviceAwareComponent>
+                <AdaptiveUI>
+                  <div className='relative flex min-h-screen flex-col'>
+                    <Header />
+                    <main className='flex-1'>{children}</main>
+                    <Footer />
+                  </div>
+                </AdaptiveUI>
+              </DeviceAwareComponent>
+              
+              {/* Typography Controller - Premium Reading Experience */}
+              <TypographyController />
+            </AIPersonalizationProvider>
           </TypographyProvider>
         </ThemeProvider>
       </body>

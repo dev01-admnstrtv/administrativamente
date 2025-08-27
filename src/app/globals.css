@@ -12,6 +12,9 @@
 @import '../styles/focus-reading.css';
 @import '../styles/magazine-layouts.css';
 
+/* PHASE 3: AI-POWERED INTELLIGENCE STYLES */
+@import '../styles/ai-intelligence.css';
+
 @layer base {
   :root {
     /* Apple-inspired Light Mode Colors */
@@ -472,14 +475,174 @@
   }
 }
 
+/* ========================================
+   ADAPTIVE UI STYLES - PHASE 3
+   ======================================== */
+
+/* Base adaptive container */
+.adaptive-ui-container {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Color scheme adaptations */
+.adaptive-warm {
+  --adaptive-bg: hsl(45, 20%, 98%);
+  --adaptive-text: hsl(25, 15%, 20%);
+  --adaptive-accent: hsl(35, 60%, 50%);
+  filter: sepia(0.1) saturate(1.1);
+}
+
+.adaptive-cool {
+  --adaptive-bg: hsl(215, 25%, 98%);
+  --adaptive-text: hsl(215, 20%, 15%);
+  --adaptive-accent: hsl(215, 60%, 50%);
+  filter: hue-rotate(10deg) saturate(0.9);
+}
+
+.adaptive-neutral {
+  --adaptive-bg: hsl(var(--background));
+  --adaptive-text: hsl(var(--foreground));
+  --adaptive-accent: hsl(var(--primary));
+}
+
+/* Layout adaptations */
+.adaptive-layout-compact {
+  --adaptive-spacing: 0.75rem;
+  --adaptive-line-height: 1.4;
+  --adaptive-font-size: 0.9rem;
+}
+
+.adaptive-layout-comfortable {
+  --adaptive-spacing: 1rem;
+  --adaptive-line-height: 1.6;
+  --adaptive-font-size: 1rem;
+}
+
+.adaptive-layout-spacious {
+  --adaptive-spacing: 1.5rem;
+  --adaptive-line-height: 1.8;
+  --adaptive-font-size: 1.125rem;
+}
+
+/* Apply adaptive variables */
+.adaptive-ui-container * {
+  font-size: var(--adaptive-font-size, inherit);
+  line-height: var(--adaptive-line-height, inherit);
+  margin: var(--adaptive-spacing, inherit);
+}
+
+.adaptive-ui-container p,
+.adaptive-ui-container div {
+  margin-bottom: var(--adaptive-spacing, 1rem);
+}
+
+/* Focus mode adaptations */
+.adaptive-focus-mode {
+  background: linear-gradient(135deg, 
+    rgba(var(--adaptive-bg), 0.98) 0%, 
+    rgba(var(--adaptive-bg), 0.95) 100%);
+  backdrop-filter: blur(20px);
+}
+
+.adaptive-focus-mode > * {
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* No animations preference */
+.adaptive-no-animations,
+.adaptive-no-animations * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Device-specific adaptations */
+.device-aware.mobile {
+  --mobile-touch-target: 44px;
+}
+
+.device-aware.mobile button,
+.device-aware.mobile a,
+.device-aware.mobile [role="button"] {
+  min-height: var(--mobile-touch-target);
+  min-width: var(--mobile-touch-target);
+}
+
+.device-aware.touch-enabled {
+  --hover-effects: none;
+}
+
+.device-aware.touch-enabled *:hover {
+  transform: none !important;
+}
+
+/* Contextual page adaptations */
+.contextual-adapter.page-article {
+  max-width: 75ch;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.contextual-adapter.page-home {
+  display: grid;
+  gap: 2rem;
+}
+
+.contextual-adapter.page-category {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.contextual-adapter.page-search {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Smart content organization */
+.smart-content-organizer .priority-item {
+  position: relative;
+  border-left: 3px solid var(--ai-primary, #00d4ff);
+  padding-left: 1rem;
+  background: linear-gradient(90deg, 
+    rgba(0, 212, 255, 0.05) 0%, 
+    transparent 50%);
+}
+
+.smart-content-organizer .regular-item {
+  opacity: 0.95;
+}
+
+/* AI insights overlay */
+.ai-insights-trigger {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 40;
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: ai-pulse 2s ease-in-out infinite;
+}
+
 /* Print Styles */
 @media print {
-  .no-print {
+  .no-print,
+  .ai-thinking-indicator,
+  .personalization-badge,
+  .smart-recommendation,
+  .ai-insights-trigger {
     display: none !important;
   }
   
   .print-only {
     display: block !important;
+  }
+  
+  .adaptive-ui-container {
+    filter: none !important;
   }
   
   body {

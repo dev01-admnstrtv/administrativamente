@@ -6,6 +6,8 @@ import { Eye, BookOpen, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { FocusReader, useFocusReader } from '@/components/ui/FocusReader'
 import { MicroButton } from '@/components/ui/MicroInteractions'
+import { ReadingAnalytics, ReadingProgress } from '@/components/ai/ReadingAnalytics'
+import { useActionTracking } from '@/components/ai/AIPersonalizationProvider'
 
 interface PostContentProps {
   title: string
@@ -34,6 +36,8 @@ export function PostContent({
   className = ""
 }: PostContentProps) {
   const { isOpen, openReader, closeReader } = useFocusReader()
+  const { trackShare, trackBookmark } = useActionTracking()
+  const [analyticsData, setAnalyticsData] = useState<any>(null)
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR', {
@@ -121,6 +125,7 @@ export function PostContent({
 
             <MicroButton
               variant="ripple"
+              onClick={() => trackShare('article', { title, category: category.name })}
               className="flex items-center gap-2 px-4 py-3 glass-layer-1 rounded-xl hover:glass-layer-2"
             >
               <Share2 className="w-4 h-4" />
@@ -179,6 +184,19 @@ export function PostContent({
           </div>
         </motion.footer>
       </article>
+
+      {/* Reading Progress Indicator */}
+      <ReadingProgress showPercentage={true} />
+
+      {/* Reading Analytics */}
+      <ReadingAnalytics
+        articleSlug={title.toLowerCase().replace(/[^a-z0-9]/g, '-')}
+        articleTitle={title}
+        articleCategory={category.name}
+        articleReadingTime={readingTime}
+        onAnalyticsUpdate={setAnalyticsData}
+        className="fixed bottom-4 right-4 z-40"
+      />
 
       {/* Focus Reader */}
       <FocusReader
